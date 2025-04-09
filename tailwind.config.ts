@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom theme colors
+				ethereum: {
+					DEFAULT: '#627EEA',
+					light: '#8BA3F9',
+					dark: '#4058A8',
+				},
+				polygon: {
+					DEFAULT: '#8247E5',
+					light: '#A47EF2',
+					dark: '#5F32A8',
+				},
+				teleport: {
+					DEFAULT: '#00F6FF',
+					light: '#7FFFFF',
+					dark: '#00B0B8',
+				},
+				space: {
+					DEFAULT: '#0D1021',
+					light: '#1E2243',
+					dark: '#070810',
 				}
 			},
 			borderRadius: {
@@ -70,25 +92,40 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+				'teleport': {
+					'0%': { transform: 'scale(1)', opacity: '1' },
+					'50%': { transform: 'scale(0.8)', opacity: '0.5' },
+					'100%': { transform: 'scale(0)', opacity: '0' }
+				},
+				'receive': {
+					'0%': { transform: 'scale(0)', opacity: '0' },
+					'50%': { transform: 'scale(0.8)', opacity: '0.5' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'pulse-glow': {
+					'0%': { boxShadow: '0 0 5px 0 rgba(0, 246, 255, 0.4)' },
+					'50%': { boxShadow: '0 0 20px 5px rgba(0, 246, 255, 0.7)' },
+					'100%': { boxShadow: '0 0 5px 0 rgba(0, 246, 255, 0.4)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'teleport': 'teleport 1.5s ease-in-out',
+				'receive': 'receive 1.5s ease-in-out',
+				'pulse-glow': 'pulse-glow 2s infinite'
+			},
+			backgroundImage: {
+				'space-gradient': 'radial-gradient(circle at center, #1E2243 0%, #0D1021 100%)',
+				'ethereum-gradient': 'linear-gradient(135deg, #627EEA 0%, #4058A8 100%)',
+				'polygon-gradient': 'linear-gradient(135deg, #8247E5 0%, #5F32A8 100%)',
 			}
 		}
 	},
