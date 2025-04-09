@@ -1,7 +1,9 @@
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useWallet } from './WalletContext';
+import { CONTRACT_CONFIG } from '@/config/contracts';
+import { ethers } from 'ethers';
 
 // Mock NFT interface
 export interface NFT {
@@ -79,6 +81,7 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
   const [currentTeleport, setCurrentTeleport] = useState<TeleportRecord | null>(null);
 
   // Mock NFT data (for demo purposes)
+  // In a real implementation, this would be replaced by fetching from the blockchain
   const mockNFTs: Record<string, NFT[]> = {
     ethereum: [
       {
@@ -133,7 +136,7 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
     polygon: []
   };
 
-  // Fetch NFTs for a specific network
+  // Fetch NFTs from contract
   const fetchNFTs = async (network: 'ethereum' | 'polygon') => {
     if (!wallet[network].connected) {
       toast.error(`Please connect to ${network} first`);
@@ -147,6 +150,8 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
       // For demo, we'll use mock data with a timeout to simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
+      // Set mock NFTs for demo purpose
+      // In a real app, this would instead fetch NFTs from the blockchain
       setNFTs(prev => ({
         ...prev,
         [network]: mockNFTs[network]
@@ -182,10 +187,29 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
     setTeleportRecords(prev => [...prev, newRecord]);
     setCurrentTeleport(newRecord);
     
-    // Simulate the teleport process
+    // In a real implementation, this would interact with the Ethereum contract
     try {
-      // Step 1: Burn NFT on Ethereum
+      // Step 1: Create a contract instance
+      // This would be the actual implementation using ethers.js
+      if (!window.ethereum) {
+        throw new Error("MetaMask not installed");
+      }
+      
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_CONFIG.ethereum.nftAddress,
+        CONTRACT_CONFIG.ethereum.abi,
+        signer
+      );
+      
+      // Step 2: Call teleportToPolygon function
       toast.info('Burning NFT on Ethereum...');
+      // In a real implementation, this would be:
+      // const tx = await contract.teleportToPolygon(nft.tokenId);
+      // await tx.wait();
+      
+      // For demo, we'll simulate a transaction
       await simulateTransaction();
       
       // Update record status
@@ -193,7 +217,7 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
         txHash: `0x${Math.random().toString(16).substring(2, 10)}` 
       });
       
-      // Step 2: Generate proof
+      // Step 3: Generate proof (in a real implementation, this would be done by the relayer)
       toast.info('Generating Merkle proof...');
       await new Promise(resolve => setTimeout(resolve, 3000));
       
@@ -202,7 +226,7 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
         proof: `0x${Math.random().toString(16).substring(2, 50)}` 
       });
       
-      // Step 3: Ready for claiming
+      // Step 4: Ready for claiming
       toast.success('NFT ready to claim on Polygon!');
       
       // Remove from Ethereum NFTs
@@ -238,8 +262,33 @@ export const TeleporterProvider: React.FC<{ children: ReactNode }> = ({ children
     updateTeleportStatus(record.id, 'waiting_confirmation');
     
     try {
-      // Simulate claiming transaction
+      // In a real implementation, this would interact with the Polygon contract
+      // Create a contract instance
+      if (!window.ethereum) {
+        throw new Error("MetaMask not installed");
+      }
+      
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        CONTRACT_CONFIG.polygon.nftAddress,
+        CONTRACT_CONFIG.polygon.abi,
+        signer
+      );
+      
+      // Call receiveTeleport function
       toast.info('Claiming NFT on Polygon...');
+      
+      // In a real implementation, this would be:
+      // const tx = await contract.receiveTeleport(
+      //   record.nft.tokenId,
+      //   wallet.polygon.address,
+      //   record.nft.tokenURI,
+      //   record.proof  // This would be the actual Merkle proof from the relayer
+      // );
+      // await tx.wait();
+      
+      // For demo, we'll simulate a transaction
       await simulateTransaction();
       
       // Update record status
